@@ -6,16 +6,7 @@
 
 @section('multiple-action-button')
     <div class="col-md-4 mt-2">
-        <div class="weekly-dates-div">
-            <i class="fa fa-arrow-left previous"></i>
-
-            <span class="weekly-dates"></span>
-
-            <input type="hidden" id="weeknumber" value="0">
-            <input type="hidden" id="selected_dates">
-
-            <i class="fa fa-arrow-right next"></i>
-        </div>
+        <a class="btn btn-xs btn-success pdf-download-btn float-right" href="{{ route('timesheet.report.print', $currentWorkspace->slug) }}" target="_blank"><i class="fa fa-file"></i> {{ __('Download PDF') }}</a>
     </div>
 
     @if(isset($currentWorkspace) && $currentWorkspace)
@@ -43,7 +34,6 @@
 
             <div class="row">
                 <div class="col-md-12">
-
                     <div id="timesheet-table-view"></div>
                     <div class="card notfound-timesheet text-center">
                         <div class="card-body p-3">
