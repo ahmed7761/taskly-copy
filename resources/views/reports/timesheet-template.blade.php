@@ -125,7 +125,7 @@
                     <div class="preview-main client-preview">
                         <div data-v-f2a183a6="" class="d" id="boxes">
                             <div data-v-f2a183a6="" class="d-body">
-                                <h1 class="pdf-title">Weekly Timesheet of {{ $currentWorkspace->name }}</h1>
+                                <h1 class="pdf-title">Weekly Timesheet of {{ $project_search ? $project_search->name : $currentWorkspace->name }}</h1>
                                 <div class="row">
                                     <div class="col-md-12">
 

@@ -116,6 +116,7 @@ class ReportController extends Controller
 
     public function printTimesheetReport(Request $request, $slug){
 
+        $project_search = null;
         if($request->timesheet_search) {
             $project_name = $request->timesheet_search;
             $project_search = Project::where('name', 'like', '%'.$project_name.'%')->first();
@@ -139,7 +140,7 @@ class ReportController extends Controller
             $timesheets = Timesheet::select('timesheets.*')->join('projects', 'projects.id', '=', 'timesheets.project_id')->join('tasks', 'timesheets.task_id', '=', 'tasks.id')->where('projects.workspace', '=', $currentWorkspace->id)->whereRaw("find_in_set('" . $objUser->id . "',tasks.assign_to)")->get();
         }
 
-        return view('reports.timesheet-template', compact('currentWorkspace','timesheets', 'project_id'));
+        return view('reports.timesheet-template', compact('currentWorkspace','timesheets', 'project_id', 'project_search'));
     }
 
 

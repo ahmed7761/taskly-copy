@@ -93,8 +93,6 @@
                 project_name: project_name,
             };
 
-            console.log(data);
-
             $.ajax({
                 @if(Auth::user()->getGuard() == 'client')
                 url: '{{ route('client.filter.timesheet.table.view', '__slug') }}'.replace('__slug', '{{ $currentWorkspace->slug }}'),
