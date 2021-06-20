@@ -5,9 +5,16 @@
 @php $client_keyword = Auth::user()->getGuard() == 'client' ? 'client.' : ''; @endphp
 
 @section('multiple-action-button')
-    <div class="col-md-4 mt-2">
-        <a class="btn btn-xs btn-success pdf-download-btn float-right" href="{{ route('timesheet.report.print', $currentWorkspace->slug) }}" target="_blank"><i class="fa fa-file"></i> {{ __('Download PDF') }}</a>
-    </div>
+    <section class="row my-5">
+        <div class="col-12">
+            <form method="post" class="float-right">
+                @csrf
+                <input type="text" name="timesheet_search" id="timesheet_search" class="custom-input" placeholder="Enter Project Name">
+                <button type="button" id="timesheet_search_btn" class="btn btn-xs btn-info">Search</button><br>
+                <button type="submit" class="btn btn-xs btn-success pdf-download-btn float-right mt-3" formaction="{{ route('timesheet.report.print', $currentWorkspace->slug) }}" formtarget="_blank"><i class="fa fa-file"></i> {{ __('Download PDF') }}</button>
+            </form>
+        </div>
+    </section>
 
     @if(isset($currentWorkspace) && $currentWorkspace)
         @if($project_id != '-1' && Auth::user()->getGuard() != 'client')
@@ -69,6 +76,8 @@
 @endpush
 @push('scripts')
     <script>
+        let project_name = '';
+
         function ajaxFilterTimesheetTableView() {
 
             var mainEle = $('#timesheet-table-view');
@@ -77,10 +86,14 @@
             var week = parseInt($('#weeknumber').val());
             var project_id = '{{ $project_id }}';
 
+
             var data = {
                 week: week,
                 project_id: project_id,
+                project_name: project_name,
             };
+
+            console.log(data);
 
             $.ajax({
                 @if(Auth::user()->getGuard() == 'client')
@@ -134,6 +147,11 @@
                 $('#weeknumber').val(weeknumber);
             }
 
+            ajaxFilterTimesheetTableView();
+        });
+
+        $('#timesheet_search_btn').click(function() {
+            project_name = $('#timesheet_search').val();
             ajaxFilterTimesheetTableView();
         });
 

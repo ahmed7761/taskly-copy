@@ -114,8 +114,15 @@ class ReportController extends Controller
 
     }
 
-    public function printTimesheetReport($slug){
-        $project_id = '-1';
+    public function printTimesheetReport(Request $request, $slug){
+
+        if($request->timesheet_search) {
+            $project_name = $request->timesheet_search;
+            $project_search = Project::where('name', 'like', '%'.$project_name.'%')->first();
+            $project_id = $project_search->id;
+        } else {
+            $project_id = '-1';
+        }
 
         $currentWorkspace = Utility::getWorkspaceBySlug($slug);
         $objUser          = Auth::user();
@@ -132,7 +139,7 @@ class ReportController extends Controller
             $timesheets = Timesheet::select('timesheets.*')->join('projects', 'projects.id', '=', 'timesheets.project_id')->join('tasks', 'timesheets.task_id', '=', 'tasks.id')->where('projects.workspace', '=', $currentWorkspace->id)->whereRaw("find_in_set('" . $objUser->id . "',tasks.assign_to)")->get();
         }
 
-        return view('reports.timesheet-template', compact('currentWorkspace', 'project_id'));
+        return view('reports.timesheet-template', compact('currentWorkspace','timesheets', 'project_id'));
     }
 
 

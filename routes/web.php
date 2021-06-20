@@ -101,7 +101,7 @@ Route::post('/{slug}/task-report/print',['as' => 'task.report.print','uses' =>'R
 Route::post('/{slug}/task-report-search',['as' => 'task.report.search','uses' =>'ReportController@taskSearch']);
 
 Route::get('/{slug}/timesheet-report',['as' => 'timesheet.report','uses' =>'ReportController@timesheet']);
-Route::get('/{slug}/timesheet-report/print',['as' => 'timesheet.report.print','uses' =>'ReportController@printTimesheetReport']);
+Route::post('/{slug}/timesheet-report/print',['as' => 'timesheet.report.print','uses' =>'ReportController@printTimesheetReport']);
 
 // Calender
 Route::get('/{slug}/calender/{id?}',['as' => 'calender.index','uses' =>'CalenderController@index'])->middleware(['auth','XSS']);

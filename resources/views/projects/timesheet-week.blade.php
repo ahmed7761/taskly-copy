@@ -24,7 +24,7 @@
             @foreach ($timesheetArray as $key => $timesheet)
 
                 <tr>
-                    <td colspan="9"><span class="project-name">{{ $timesheet['project_name'] }}</span></td>
+                    <td colspan="9"><span class="project-name"><strong>Project Name: </strong>{{ $timesheet['project_name'] }}</span></td>
                 </tr>
 
                 @foreach ($timesheet['taskArray'] as $key => $taskTimesheet)
@@ -32,7 +32,7 @@
                     <tr>
                         <td colspan="9">
                             <div class="task-name ml-3">
-                                {{ $taskTimesheet['task_name'] }}
+                                <strong>Task Name: </strong>{{ $taskTimesheet['task_name'] }}
                             </div>
                         </td>
                     </tr>

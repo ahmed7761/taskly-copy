@@ -104,40 +104,14 @@
             vertical-align: middle;
             border-color: inherit;
         }
-        .badge {
-            display: inline-block;
-            padding: 0.25rem 0.5rem;
-            font-size: 80%;
-            font-weight: 700;
-            line-height: 1;
-            text-align: center;
-            white-space: nowrap;
-            vertical-align: baseline;
-            border-radius: 0.25rem;
-            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-        }
-
-        .badge {
-            display: inline;
-            text-transform: none;
-            color: #FFF;
-        }
-
-        .badge-success {
-            background-color: #36B37E !important;
-        }
-
-        .badge-warning {
-            background-color: #FFAB00;
-        }
-
-        .badge-danger {
-            background-color: red;
-        }
 
         .pdf-title {
             text-align: center;
             margin-bottom: 30px;
+        }
+
+        .task-name {
+            margin-left: 1rem;
         }
     </style>
 </head>
@@ -151,7 +125,7 @@
                     <div class="preview-main client-preview">
                         <div data-v-f2a183a6="" class="d" id="boxes">
                             <div data-v-f2a183a6="" class="d-body">
-                                <h1 class="pdf-title">Timesheet of {{ $currentWorkspace->name }}</h1>
+                                <h1 class="pdf-title">Weekly Timesheet of {{ $currentWorkspace->name }}</h1>
                                 <div class="row">
                                     <div class="col-md-12">
 

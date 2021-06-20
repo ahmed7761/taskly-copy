@@ -2036,7 +2036,13 @@ class ProjectController extends Controller
         $objUser = Auth::user();
 
         $week       = $request->week;
-        $project_id = $request->project_id;
+        $project_name     = $request->has('project_name') ? $request->project_name : null;
+        if($project_name) {
+            $project_search = Project::where('name', 'like', '%'.$project_name.'%')->first();
+            $project_id = $project_search->id;
+        } else {
+            $project_id     = $request->has('project_id') ? $request->project_id : null;
+        }
 
         $currentWorkspace = Utility::getWorkspaceBySlug($slug);
 
