@@ -93,15 +93,15 @@ Route::prefix('client')->as('client.')->group(function() {
 });
 
 // Reports
-Route::get('/{slug}/invoice-report',['as' => 'invoice.report','uses' =>'ReportController@invoice']);
-Route::post('/{slug}/invoice-report-search',['as' => 'invoice.report.search','uses' =>'ReportController@invoiceSearch']);
-Route::post('/{slug}/invoice/print',['as' => 'invoice.report.print','uses' =>'ReportController@printInvoiceReport']);
-Route::any('/{slug}/task-report',['as' => 'task.report','uses' =>'ReportController@task']);
-Route::post('/{slug}/task-report/print',['as' => 'task.report.print','uses' =>'ReportController@printTaskReport']);
-Route::post('/{slug}/task-report-search',['as' => 'task.report.search','uses' =>'ReportController@taskSearch']);
+Route::get('/{slug}/invoice-report',['as' => 'invoice.report','uses' =>'ReportController@invoice'])->middleware(['auth','XSS']);
+Route::post('/{slug}/invoice-report-search',['as' => 'invoice.report.search','uses' =>'ReportController@invoiceSearch'])->middleware(['auth','XSS']);
+Route::post('/{slug}/invoice/print',['as' => 'invoice.report.print','uses' =>'ReportController@printInvoiceReport'])->middleware(['auth','XSS']);
+Route::any('/{slug}/task-report',['as' => 'task.report','uses' =>'ReportController@task'])->middleware(['auth','XSS']);
+Route::post('/{slug}/task-report/print',['as' => 'task.report.print','uses' =>'ReportController@printTaskReport'])->middleware(['auth','XSS']);
+Route::post('/{slug}/task-report-search',['as' => 'task.report.search','uses' =>'ReportController@taskSearch'])->middleware(['auth','XSS']);
 
-Route::get('/{slug}/timesheet-report',['as' => 'timesheet.report','uses' =>'ReportController@timesheet']);
-Route::post('/{slug}/timesheet-report/print',['as' => 'timesheet.report.print','uses' =>'ReportController@printTimesheetReport']);
+Route::get('/{slug}/timesheet-report',['as' => 'timesheet.report','uses' =>'ReportController@timesheet'])->middleware(['auth','XSS']);
+Route::post('/{slug}/timesheet-report/print',['as' => 'timesheet.report.print','uses' =>'ReportController@printTimesheetReport'])->middleware(['auth','XSS']);
 
 // Calender
 Route::get('/{slug}/calender/{id?}',['as' => 'calender.index','uses' =>'CalenderController@index'])->middleware(['auth','XSS']);
