@@ -2,7 +2,7 @@
     <form class="px-3" method="post" action="@auth('web'){{ route('tasks.store',[$currentWorkspace->slug,$project->id]) }}@elseauth{{ route('client.tasks.store',[$currentWorkspace->slug,$project->id]) }}@endauth">
         @csrf
         <div class="row">
-            <div class="form-group col-md-8">
+            <div class="form-group col-md-6">
                 <label class="form-control-label">{{ __('Project')}}</label>
                 <select class="form-control form-control-light select2" name="project_id" required>
                     @foreach($projects as $p)
@@ -10,7 +10,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-6">
                 <label class="form-control-label">{{ __('Milestone')}}</label>
                 <select class="form-control form-control-light select2" name="milestone_id" id="task-milestone">
                     <option value="">{{__('Select Milestone')}}</option>
@@ -19,17 +19,15 @@
                     @endforeach
                 </select>
             </div>
-            <div class="form-group col-md-8">
+            <div class="form-group col-md-6">
                 <label class="form-control-label">{{ __('Title')}}</label>
                 <input type="text" class="form-control form-control-light" id="task-title" placeholder="{{ __('Enter Title')}}" name="title" required>
             </div>
-            <div class="form-group col-md-4">
-                <label class="form-control-label">{{ __('Priority')}}</label>
-                <select class="form-control form-control-light select2" name="priority" id="task-priority" required>
-                    <option value="Low">{{ __('Low')}}</option>
-                    <option value="Medium">{{ __('Medium')}}</option>
-                    <option value="High">{{ __('High')}}</option>
-                </select>
+            <div class="form-group col-md-6">
+                <label class="form-control-label">{{ __('Duration')}}</label>
+                <input type="text" class="form-control form-control-light" id="duration" name="duration" required autocomplete="off">
+                <input type="hidden" name="start_date">
+                <input type="hidden" name="due_date">
             </div>
             <div class="form-group col-md-6">
                 <label class="form-control-label">{{ __('Assign To')}}</label>
@@ -40,10 +38,12 @@
                 </select>
             </div>
             <div class="form-group col-md-6">
-                <label class="form-control-label">{{ __('Duration')}}</label>
-                <input type="text" class="form-control form-control-light" id="duration" name="duration" required autocomplete="off">
-                <input type="hidden" name="start_date">
-                <input type="hidden" name="due_date">
+                <label class="form-control-label">{{ __('Priority')}}</label>
+                <select class="form-control form-control-light select2" name="priority" id="task-priority" required>
+                    <option value="Low">{{ __('Low')}}</option>
+                    <option value="Medium">{{ __('Medium')}}</option>
+                    <option value="High">{{ __('High')}}</option>
+                </select>
             </div>
             <div class="form-group col-md-12">
                 <label class="form-control-label">{{ __('Description')}}</label>
