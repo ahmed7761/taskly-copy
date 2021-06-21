@@ -138,6 +138,7 @@ class Project extends Model
 
                             $users = $new_projects_timesheet->where('timesheets.task_id', $task->id)->groupBy('timesheets.created_by')->pluck('created_by')->toArray();
 
+
                             foreach($users as $count => $user_id)
                             {
                                 $times = [];

@@ -10,6 +10,14 @@
             <textarea class="form-control" id="description" name="description" required="" placeholder="{{ __('Add Description') }}">{{$project->description}}</textarea>
         </div>
         <div class="form-group col-md-6">
+            <label for="start_date" class="form-control-label">{{ __('Start Date') }}</label>
+            <input class="form-control datepicker" type="text" id="start_date" name="start_date" value="{{$project->start_date}}" autocomplete="off" required="required">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="end_date" class="form-control-label">{{ __('End Date') }}</label>
+            <input class="form-control datepicker" type="text" id="end_date" name="end_date" value="{{$project->end_date}}" autocomplete="off" required="required">
+        </div>
+        <div class="form-group col-md-6">
             <label for="status" class="form-control-label">{{ __('Status') }}</label>
             <select id="status" name="status" class="form-control select2">
                 <option value="Ongoing">{{ __('Ongoing') }}</option>
@@ -24,14 +32,6 @@
                 <span class="currency-icon">{{ (!empty($currentWorkspace->currency)) ? $currentWorkspace->currency : '$'}}</span>
                 <input class="form-control" type="number" min="0" id="budget" name="budget" value="{{$project->budget}}" placeholder="{{ __('Project Budget') }}">
             </div>
-        </div>
-        <div class="form-group col-md-6">
-            <label for="start_date" class="form-control-label">{{ __('Start Date') }}</label>
-            <input class="form-control datepicker" type="text" id="start_date" name="start_date" value="{{$project->start_date}}" autocomplete="off" required="required">
-        </div>
-        <div class="form-group col-md-6">
-            <label for="end_date" class="form-control-label">{{ __('End Date') }}</label>
-            <input class="form-control datepicker" type="text" id="end_date" name="end_date" value="{{$project->end_date}}" autocomplete="off" required="required">
         </div>
         <div class="col-md-12">
             <input type="submit" class="btn-create badge-blue" value="{{ __('Save') }}">
