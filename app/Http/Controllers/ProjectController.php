@@ -2037,11 +2037,18 @@ class ProjectController extends Controller
 
         $week       = $request->week;
         $project_name     = $request->has('project_name') ? $request->project_name : null;
+        $project_user_name     = $request->has('project_user_name') ? $request->project_user_name : null;
         if($project_name) {
             $project_search = Project::where('name', 'like', '%'.$project_name.'%')->first();
             $project_id = $project_search->id;
         } else {
             $project_id     = $request->has('project_id') ? $request->project_id : null;
+        }
+
+        $project_user_id = 0;
+        if($project_user_name) {
+            $project_user = User::where('name', 'like', '%'.$project_user_name.'%')->first();
+            $project_user_id = $project_user->id;
         }
 
         $currentWorkspace = Utility::getWorkspaceBySlug($slug);
@@ -2052,7 +2059,11 @@ class ProjectController extends Controller
             {
                 $timesheets = Timesheet::select('timesheets.*')->join('projects', 'projects.id', '=', 'timesheets.project_id')->join('tasks', 'tasks.id', '=', 'timesheets.task_id')->join('client_projects', 'projects.id', '=', 'client_projects.project_id')->where('client_projects.client_id', '=', $objUser->id)->where('projects.workspace', '=', $currentWorkspace->id)->where('client_projects.permission', 'LIKE', '%show timesheet%');
             }
-            elseif($currentWorkspace->permission == 'Owner')
+            elseif($currentWorkspace->permission == 'Owner' && $project_user_id != 0)
+            {
+                $timesheets = Timesheet::select('timesheets.*')->join('projects', 'projects.id', '=', 'timesheets.project_id')->join('tasks', 'tasks.id', '=', 'timesheets.task_id')->where('timesheets.created_by', $project_user_id)->where('projects.workspace', '=', $currentWorkspace->id);
+            }
+            elseif($currentWorkspace->permission == 'Owner' && $project_user_id == 0)
             {
                 $timesheets = Timesheet::select('timesheets.*')->join('projects', 'projects.id', '=', 'timesheets.project_id')->join('tasks', 'tasks.id', '=', 'timesheets.task_id')->where('projects.workspace', '=', $currentWorkspace->id);
             }
@@ -2087,7 +2098,8 @@ class ProjectController extends Controller
 
             $task_ids = array_keys($timesheets);
 
-            $returnHTML = Project::getProjectAssignedTimesheetHTML($currentWorkspace, $timesheets, $days, $project_id);
+             $returnHTML = Project::getProjectAssignedTimesheetHTML($currentWorkspace, $project_user_id, $timesheets, $days, $project_id);
+          //  $returnHTML = Project::getProjectAssignedTimesheetHTML($currentWorkspace, $timesheets, $days, $project_id);
 
             $totalrecords = count($timesheets);
 

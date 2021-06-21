@@ -96,7 +96,7 @@ class Project extends Model
         return $this->hasMany('App\ActivityLog', 'project_id', 'id')->orderBy('id', 'desc');
     }
 
-    public static function getProjectAssignedTimesheetHTML($currentWorkspace, $timesheets = [], $days = [], $project_id = null, $seeAsOwner = false)
+    public static function getProjectAssignedTimesheetHTML($currentWorkspace, $project_user_id, $timesheets = [], $days = [], $project_id = null, $seeAsOwner = false)
     {
         $objUser         = Auth::user();
 
@@ -136,8 +136,14 @@ class Project extends Model
 
                             $new_projects_timesheet = clone $project_timesheets;
 
-                            $users = $new_projects_timesheet->where('timesheets.task_id', $task->id)->groupBy('timesheets.created_by')->pluck('created_by')->toArray();
+                            if($project_user_id != 0) {
+                                $users = $new_projects_timesheet->where('timesheets.created_by', $project_user_id)->groupBy('timesheets.created_by')->pluck('created_by')->toArray();
+                            } else {
+                                $users = $new_projects_timesheet->where('timesheets.task_id', $task->id)->groupBy('timesheets.created_by')->pluck('created_by')->toArray();
+                            }
 
+
+                           // $users = $new_projects_timesheet->where('timesheets.task_id', $task->id)->groupBy('timesheets.created_by')->pluck('created_by')->toArray();
 
                             foreach($users as $count => $user_id)
                             {

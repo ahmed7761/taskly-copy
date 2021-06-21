@@ -11,6 +11,8 @@
                 @csrf
                 <input type="text" name="timesheet_search" id="timesheet_search" class="custom-input" placeholder="Enter Project Name">
                 <button type="button" id="timesheet_search_btn" class="btn btn-xs btn-info">Search</button><br>
+                <input type="text" name="project_user_name" id="project_user_name" class="custom-input" placeholder="Enter Project User Name">
+                <button type="button" id="project_user_name_btn" class="btn btn-xs btn-info">Search User</button><br>
                 <button type="submit" class="btn btn-xs btn-success pdf-download-btn float-right mt-3" formaction="{{ route('timesheet.report.print', $currentWorkspace->slug) }}" formtarget="_blank"><i class="fa fa-file"></i> {{ __('Download PDF') }}</button>
             </form>
         </div>
@@ -77,6 +79,7 @@
 @push('scripts')
     <script>
         let project_name = '';
+        let project_user_name = '';
 
         function ajaxFilterTimesheetTableView() {
 
@@ -91,7 +94,10 @@
                 week: week,
                 project_id: project_id,
                 project_name: project_name,
+                project_user_name: project_user_name,
             };
+
+            console.log(data)
 
             $.ajax({
                 @if(Auth::user()->getGuard() == 'client')
@@ -150,6 +156,13 @@
 
         $('#timesheet_search_btn').click(function() {
             project_name = $('#timesheet_search').val();
+            project_user_name = '';
+            ajaxFilterTimesheetTableView();
+        });
+
+        $('#project_user_name_btn').click(function() {
+            project_name = '';
+            project_user_name = $('#project_user_name').val();
             ajaxFilterTimesheetTableView();
         });
 
