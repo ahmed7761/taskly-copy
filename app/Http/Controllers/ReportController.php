@@ -125,13 +125,25 @@ class ReportController extends Controller
             $project_id = '-1';
         }
 
+        $project_user_name = $request->has('project_user_name') ? $request->project_user_name : null;
+        $project_user_id = 0;
+        if($project_user_name) {
+            $project_user = User::where('name', 'like', '%'.$project_user_name.'%')->first();
+            $project_user_id = $project_user->id;
+        }
+
         $currentWorkspace = Utility::getWorkspaceBySlug($slug);
         $objUser          = Auth::user();
         if($objUser->getGuard() == 'client')
         {
             $timesheets = Timesheet::select('timesheets.*')->join('projects', 'projects.id', '=', 'timesheets.project_id')->join('tasks', 'tasks.id', '=', 'timesheets.task_id')->join('client_projects', 'projects.id', '=', 'client_projects.project_id')->where('client_projects.client_id', '=', $objUser->id)->where('projects.workspace', '=', $currentWorkspace->id)->where('client_projects.permission', 'LIKE', '%show timesheet%')->get();
         }
-        elseif($currentWorkspace->permission == 'Owner')
+        elseif($currentWorkspace->permission == 'Owner' && $project_user_id != 0)
+        {
+//            $timesheets = Timesheet::select('timesheets.*')->join('projects', 'projects.id', '=', 'timesheets.project_id')->join('tasks', 'tasks.id', '=', 'timesheets.task_id')->where('projects.workspace', '=', $currentWorkspace->id)->get();
+             $timesheets = Timesheet::select('timesheets.*')->join('projects', 'projects.id', '=', 'timesheets.project_id')->join('tasks', 'tasks.id', '=', 'timesheets.task_id')->where('timesheets.created_by', $project_user_id)->where('projects.workspace', '=', $currentWorkspace->id)->get();
+        }
+        elseif($currentWorkspace->permission == 'Owner' && $project_user_id == 0)
         {
             $timesheets = Timesheet::select('timesheets.*')->join('projects', 'projects.id', '=', 'timesheets.project_id')->join('tasks', 'tasks.id', '=', 'timesheets.task_id')->where('projects.workspace', '=', $currentWorkspace->id)->get();
         }
@@ -139,8 +151,9 @@ class ReportController extends Controller
         {
             $timesheets = Timesheet::select('timesheets.*')->join('projects', 'projects.id', '=', 'timesheets.project_id')->join('tasks', 'timesheets.task_id', '=', 'tasks.id')->where('projects.workspace', '=', $currentWorkspace->id)->whereRaw("find_in_set('" . $objUser->id . "',tasks.assign_to)")->get();
         }
+     //   dd($timesheets);
 
-        return view('reports.timesheet-template', compact('currentWorkspace','timesheets', 'project_id', 'project_search'));
+        return view('reports.timesheet-template', compact('currentWorkspace','timesheets', 'project_id', 'project_search', 'project_user_name'));
     }
 
 

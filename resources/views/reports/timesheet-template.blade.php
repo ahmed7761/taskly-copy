@@ -184,6 +184,7 @@
         var data = {
             week: week,
             project_id: project_id,
+            project_user_name: '{{ $project_user_name }}',
         };
 
         $.ajax({

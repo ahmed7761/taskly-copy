@@ -4,43 +4,26 @@
 
 @php $client_keyword = Auth::user()->getGuard() == 'client' ? 'client.' : ''; @endphp
 
-@section('multiple-action-button')
-    <section class="row my-5">
-        <div class="col-12">
-            <form method="post" class="float-right">
-                @csrf
-                <input type="text" name="timesheet_search" id="timesheet_search" class="custom-input" placeholder="Enter Project Name">
-                <button type="button" id="timesheet_search_btn" class="btn btn-xs btn-info">Search</button><br>
-                <input type="text" name="project_user_name" id="project_user_name" class="custom-input" placeholder="Enter Project User Name">
-                <button type="button" id="project_user_name_btn" class="btn btn-xs btn-info">Search User</button><br>
-                <button type="submit" class="btn btn-xs btn-success pdf-download-btn float-right mt-3" formaction="{{ route('timesheet.report.print', $currentWorkspace->slug) }}" formtarget="_blank"><i class="fa fa-file"></i> {{ __('Download PDF') }}</button>
-            </form>
-        </div>
-    </section>
-
-    @if(isset($currentWorkspace) && $currentWorkspace)
-        @if($project_id != '-1' && Auth::user()->getGuard() != 'client')
-            <div class="col-md-3 mr-8">
-                <select class="form-control form-control-sm w-auto d-inline" size="sm" id="project_tasks">
-                    <option value="">{{ __('Add Task on Timesheet') }}</option>
-                </select>
-            </div>
-        @endif
-    @endif
-
-    @if($project_id != '-1')
-        <div class="col-md-2">
-            <a href="{{route($client_keyword.'projects.show',[$currentWorkspace->slug,$project_id])}}" class="btn btn-xs btn-white btn-icon-only width-auto">
-                <i class="fa fa-reply"></i> {{ __('Back') }}
-            </a>
-        </div>
-    @endif
-@endsection
-
 @section('content')
     <section class="section">
         @if($currentWorkspace)
-
+            <section class="row my-5">
+                <div class="col-12">
+                    <form method="post" class="float-right">
+                        @csrf
+                        <div class="row">
+                            <input type="text" name="timesheet_search" id="timesheet_search" class="custom-input" placeholder="Enter Project Name">
+                            <button type="button" id="timesheet_search_btn" class="btn btn-xs btn-success pdf-download-btn float-right my-1 ml-1">Search Project</button>
+                            <button type="submit" class="btn btn-xs btn-success pdf-download-btn float-right my-1" formaction="{{ route('timesheet.report.print', $currentWorkspace->slug) }}" formtarget="_blank"><i class="fa fa-file"></i> {{ __('PDF') }}</button>
+                        </div>
+                        <div class="row mt-3">
+                            <input type="text" name="project_user_name" id="project_user_name" class="custom-input" placeholder="Enter Employee Name">
+                            <button type="button" id="project_user_name_btn" class="btn btn-xs btn-success pdf-download-btn float-right my-1 ml-1">Search User</button>
+                            <button type="submit" class="btn btn-xs btn-success pdf-download-btn float-right my-1" formaction="{{ route('timesheet.report.print', $currentWorkspace->slug) }}" formtarget="_blank"><i class="fa fa-file"></i> {{ __('PDF') }}</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
             <div class="row">
                 <div class="col-md-12">
                     <div id="timesheet-table-view"></div>
@@ -96,8 +79,6 @@
                 project_name: project_name,
                 project_user_name: project_user_name,
             };
-
-            console.log(data)
 
             $.ajax({
                 @if(Auth::user()->getGuard() == 'client')
