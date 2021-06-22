@@ -24,8 +24,11 @@ class ReportController extends Controller
             $objUser          = Auth::user();
             $currentWorkspace = Utility::getWorkspaceBySlug($slug);
             $invoices = $objUser->getInvoices($currentWorkspace->id);
+            $project_name = '';
+            $issue_date_from = '';
+            $issue_date_to = '';
 
-            return view('reports.invoice', compact('currentWorkspace', 'invoices'));
+            return view('reports.invoice', compact('currentWorkspace', 'invoices', 'project_name', 'issue_date_from', 'issue_date_to'));
         }
         else
         {
@@ -44,11 +47,15 @@ class ReportController extends Controller
             $project_name = $request->project_name;
             $project_id = Project::select('id')->where('name', 'like', '%'.$project_name.'%')->first();
 
+            $issue_date_from = '';
+            $issue_date_to = '';
             $result = Invoice::query();
             if ($request->issue_from && $request->issue_to) {
+                $issue_date_from = $request->issue_from;
+                $issue_date_to = $request->issue_to;
                 $result = $result->whereBetween('issue_date', [$request->issue_from, $request->issue_to]);
             }
-
+            $project_name = null;
             if ($request->project_name) {
                 $project_name = $request->project_name;
                 $project_id = Project::select('id')->where('name', 'like', '%'.$project_name.'%')->first();
@@ -56,7 +63,7 @@ class ReportController extends Controller
             }
 
             $invoices = $result->where('workspace_id','=',$currentWorkspace->id)->get();
-            return view('reports.invoice', compact('currentWorkspace', 'invoices'));
+            return view('reports.invoice', compact('currentWorkspace', 'invoices', 'project_name', 'issue_date_from', 'issue_date_to'));
         }
         else
         {

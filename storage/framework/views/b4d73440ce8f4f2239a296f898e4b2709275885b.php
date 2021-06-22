@@ -8,10 +8,10 @@
                         <?php echo csrf_field(); ?>
                         <div class="col-md-12">
                             <label for="issue_from">From</label>
-                            <input type="date" name="issue_from" id="issue_from" class="custom-input">
+                            <input type="date" name="issue_from" id="issue_from" class="custom-input" value="<?php echo e($issue_date_from ?? \Carbon\Carbon::parse($issue_date_from)->format('Y-m-d')); ?>">
                             <label for="issue_to">To</label>
-                            <input type="date" name="issue_to" id="issue_to" class="custom-input">
-                            <input type="text" name="project_name" id="custom_search" class="custom-input" placeholder="Enter Project Name">
+                            <input type="date" name="issue_to" id="issue_to" class="custom-input" value="<?php echo e($issue_date_to ?? \Carbon\Carbon::parse($issue_date_to)->format('Y-m-d')); ?>">
+                            <input type="text" name="project_name" id="custom_search" class="custom-input" value="<?php echo e($project_name ??  $project_name); ?>" placeholder="Enter Project Name">
 
                             <button type="submit" class="btn btn-xs btn-info" formaction="<?php echo e(route('invoice.report.search', $currentWorkspace->slug)); ?>">Search</button>
                         </div>
@@ -72,6 +72,11 @@
             </div>
         </div>
     </section>
+    <script>
+        if ( window.history.replaceState ) {
+            window.history.replaceState( null, null, window.location.href );
+        }
+    </script>
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('layouts.admin', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\taskly\resources\views/reports/invoice.blade.php ENDPATH**/ ?>

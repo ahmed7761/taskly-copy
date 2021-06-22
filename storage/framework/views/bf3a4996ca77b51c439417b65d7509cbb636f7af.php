@@ -19,17 +19,15 @@
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </select>
             </div>
-            <div class="form-group col-md-8">
+            <div class="form-group col-md-6">
                 <label class="form-control-label"><?php echo e(__('Title')); ?></label>
                 <input type="text" class="form-control form-control-light" id="task-title" placeholder="<?php echo e(__('Enter Title')); ?>" name="title" required>
             </div>
-            <div class="form-group col-md-4">
-                <label class="form-control-label"><?php echo e(__('Priority')); ?></label>
-                <select class="form-control form-control-light select2" name="priority" id="task-priority" required>
-                    <option value="Low"><?php echo e(__('Low')); ?></option>
-                    <option value="Medium"><?php echo e(__('Medium')); ?></option>
-                    <option value="High"><?php echo e(__('High')); ?></option>
-                </select>
+            <div class="form-group col-md-6">
+                <label class="form-control-label"><?php echo e(__('Duration')); ?></label>
+                <input type="text" class="form-control form-control-light" id="duration" name="duration" required autocomplete="off">
+                <input type="hidden" name="start_date">
+                <input type="hidden" name="due_date">
             </div>
             <div class="form-group col-md-6">
                 <label class="form-control-label"><?php echo e(__('Assign To')); ?></label>
@@ -40,10 +38,12 @@
                 </select>
             </div>
             <div class="form-group col-md-6">
-                <label class="form-control-label"><?php echo e(__('Duration')); ?></label>
-                <input type="text" class="form-control form-control-light" id="duration" name="duration" required autocomplete="off">
-                <input type="hidden" name="start_date">
-                <input type="hidden" name="due_date">
+                <label class="form-control-label"><?php echo e(__('Priority')); ?></label>
+                <select class="form-control form-control-light select2" name="priority" id="task-priority" required>
+                    <option value="Low"><?php echo e(__('Low')); ?></option>
+                    <option value="Medium"><?php echo e(__('Medium')); ?></option>
+                    <option value="High"><?php echo e(__('High')); ?></option>
+                </select>
             </div>
             <div class="form-group col-md-12">
                 <label class="form-control-label"><?php echo e(__('Description')); ?></label>

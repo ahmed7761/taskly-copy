@@ -2,47 +2,28 @@
 
 <?php $client_keyword = Auth::user()->getGuard() == 'client' ? 'client.' : ''; ?>
 
-<?php $__env->startSection('multiple-action-button'); ?>
-    <div class="col-md-4 mt-2">
-        <div class="weekly-dates-div">
-            <i class="fa fa-arrow-left previous"></i>
-
-            <span class="weekly-dates"></span>
-
-            <input type="hidden" id="weeknumber" value="0">
-            <input type="hidden" id="selected_dates">
-
-            <i class="fa fa-arrow-right next"></i>
-        </div>
-    </div>
-
-    <?php if(isset($currentWorkspace) && $currentWorkspace): ?>
-        <?php if($project_id != '-1' && Auth::user()->getGuard() != 'client'): ?>
-            <div class="col-md-3 mr-8">
-                <select class="form-control form-control-sm w-auto d-inline" size="sm" id="project_tasks">
-                    <option value=""><?php echo e(__('Add Task on Timesheet')); ?></option>
-                </select>
-            </div>
-        <?php endif; ?>
-    <?php endif; ?>
-
-    <?php if($project_id != '-1'): ?>
-        <div class="col-md-2">
-            <a href="<?php echo e(route($client_keyword.'projects.show',[$currentWorkspace->slug,$project_id])); ?>" class="btn btn-xs btn-white btn-icon-only width-auto">
-                <i class="fa fa-reply"></i> <?php echo e(__('Back')); ?>
-
-            </a>
-        </div>
-    <?php endif; ?>
-<?php $__env->stopSection(); ?>
-
 <?php $__env->startSection('content'); ?>
     <section class="section">
         <?php if($currentWorkspace): ?>
-
+            <section class="row my-5">
+                <div class="col-12">
+                    <form method="post" class="float-right">
+                        <?php echo csrf_field(); ?>
+                        <div class="row">
+                            <input type="text" name="timesheet_search" id="timesheet_search" class="custom-input" placeholder="Enter Project Name">
+                            <button type="button" id="timesheet_search_btn" class="btn btn-xs btn-success pdf-download-btn float-right my-1 ml-1">Search Project</button>
+                            <button type="submit" class="btn btn-xs btn-success pdf-download-btn float-right my-1" formaction="<?php echo e(route('timesheet.report.print', $currentWorkspace->slug)); ?>" formtarget="_blank"><i class="fa fa-file"></i> <?php echo e(__('PDF')); ?></button>
+                        </div>
+                        <div class="row mt-3">
+                            <input type="text" name="project_user_name" id="project_user_name" class="custom-input" placeholder="Enter Employee Name">
+                            <button type="button" id="project_user_name_btn" class="btn btn-xs btn-success pdf-download-btn float-right my-1 ml-1">Search User</button>
+                            <button type="submit" class="btn btn-xs btn-success pdf-download-btn float-right my-1" formaction="<?php echo e(route('timesheet.report.print', $currentWorkspace->slug)); ?>" formtarget="_blank"><i class="fa fa-file"></i> <?php echo e(__('PDF')); ?></button>
+                        </div>
+                    </form>
+                </div>
+            </section>
             <div class="row">
                 <div class="col-md-12">
-
                     <div id="timesheet-table-view"></div>
                     <div class="card notfound-timesheet text-center">
                         <div class="card-body p-3">
@@ -81,6 +62,9 @@
 <?php $__env->stopPush(); ?>
 <?php $__env->startPush('scripts'); ?>
     <script>
+        let project_name = '';
+        let project_user_name = '';
+
         function ajaxFilterTimesheetTableView() {
 
             var mainEle = $('#timesheet-table-view');
@@ -89,9 +73,12 @@
             var week = parseInt($('#weeknumber').val());
             var project_id = '<?php echo e($project_id); ?>';
 
+
             var data = {
                 week: week,
                 project_id: project_id,
+                project_name: project_name,
+                project_user_name: project_user_name,
             };
 
             $.ajax({
@@ -146,6 +133,18 @@
                 $('#weeknumber').val(weeknumber);
             }
 
+            ajaxFilterTimesheetTableView();
+        });
+
+        $('#timesheet_search_btn').click(function() {
+            project_name = $('#timesheet_search').val();
+            project_user_name = '';
+            ajaxFilterTimesheetTableView();
+        });
+
+        $('#project_user_name_btn').click(function() {
+            project_name = '';
+            project_user_name = $('#project_user_name').val();
             ajaxFilterTimesheetTableView();
         });
 

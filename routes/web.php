@@ -94,7 +94,7 @@ Route::prefix('client')->as('client.')->group(function() {
 
 // Reports
 Route::get('/{slug}/invoice-report',['as' => 'invoice.report','uses' =>'ReportController@invoice'])->middleware(['auth','XSS']);
-Route::post('/{slug}/invoice-report-search',['as' => 'invoice.report.search','uses' =>'ReportController@invoiceSearch'])->middleware(['auth','XSS']);
+Route::any('/{slug}/invoice-report-search',['as' => 'invoice.report.search','uses' =>'ReportController@invoiceSearch'])->middleware(['auth','XSS']);
 Route::post('/{slug}/invoice/print',['as' => 'invoice.report.print','uses' =>'ReportController@printInvoiceReport'])->middleware(['auth','XSS']);
 Route::any('/{slug}/task-report',['as' => 'task.report','uses' =>'ReportController@task'])->middleware(['auth','XSS']);
 Route::post('/{slug}/task-report/print',['as' => 'task.report.print','uses' =>'ReportController@printTaskReport'])->middleware(['auth','XSS']);
