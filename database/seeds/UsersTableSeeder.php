@@ -21,6 +21,7 @@ class UsersTableSeeder extends Seeder
             'name' => 'Company',
             'email' => 'company@gmail.com',
             'password' => Hash::make('1234'),
+            'currant_workspace' => '1',
             'type' => 'company'
         ]);
     }

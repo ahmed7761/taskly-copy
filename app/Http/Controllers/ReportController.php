@@ -8,6 +8,7 @@ use App\Stage;
 use App\Task;
 use App\Timesheet;
 use App\User;
+use App\UserWorkspace;
 use App\Utility;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,29 +20,51 @@ class ReportController extends Controller
     {
         $currentWorkspace = Utility::getWorkspaceBySlug($slug);
         $objUser          = Auth::user();
-        if($currentWorkspace->creater->id == \Auth::user()->id || $objUser->getGuard() == 'client')
-        {
-            $objUser          = Auth::user();
-            $currentWorkspace = Utility::getWorkspaceBySlug($slug);
-            $invoices = $objUser->getInvoices($currentWorkspace->id);
-            $project_name = '';
-            $issue_date_from = '';
-            $issue_date_to = '';
 
-            return view('reports.invoice', compact('currentWorkspace', 'invoices', 'project_name', 'issue_date_from', 'issue_date_to'));
+        if($objUser->getGuard() == 'client')
+        {
+            $projects = Project::select('projects.*')->join('client_projects', 'projects.id', '=', 'client_projects.project_id')->where('client_projects.client_id', '=', $objUser->id)->where('projects.workspace', '=', $currentWorkspace->id)->get();
         }
         else
         {
-            return redirect()->route('home');
+            $projects = Project::select('projects.*')->join('user_projects', 'projects.id', '=', 'user_projects.project_id')->where('user_projects.user_id', '=', $objUser->id)->where('projects.workspace', '=', $currentWorkspace->id)->get();
         }
+        // dd($projects);
+        $invoices = $objUser->getInvoices($currentWorkspace->id);
+        $project_name = '';
+        $issue_date_from = '';
+        $issue_date_to = '';
+
+        return view('reports.invoice', compact('currentWorkspace', 'invoices', 'projects', 'project_name', 'issue_date_from', 'issue_date_to'));
+//        return view('reports.invoice', compact('currentWorkspace', 'invoices', 'projects'));
+//        if($currentWorkspace->creater->id == \Auth::user()->id || $objUser->getGuard() == 'client')
+//        {
+//            $objUser          = Auth::user();
+//            $currentWorkspace = Utility::getWorkspaceBySlug($slug);
+//            $invoices = $objUser->getInvoices($currentWorkspace->id);
+
+//        }
+//        else
+//        {
+//            return redirect()->route('home');
+//        }
     }
 
-    public function invoiceSearch(Request $request, $slug) {
+    public function invoiceSearch(Request $request, $slug)
+    {
         $currentWorkspace = Utility::getWorkspaceBySlug($slug);
         $objUser          = Auth::user();
+        if($objUser->getGuard() == 'client')
+        {
+            $projects = Project::select('projects.*')->join('client_projects', 'projects.id', '=', 'client_projects.project_id')->where('client_projects.client_id', '=', $objUser->id)->where('projects.workspace', '=', $currentWorkspace->id)->get();
+        }
+        else
+        {
+            $projects = Project::select('projects.*')->join('user_projects', 'projects.id', '=', 'user_projects.project_id')->where('user_projects.user_id', '=', $objUser->id)->where('projects.workspace', '=', $currentWorkspace->id)->get();
+        }
         if($currentWorkspace->creater->id == \Auth::user()->id || $objUser->getGuard() == 'client')
         {
-            $objUser          = Auth::user();
+//            $objUser          = Auth::user();
             $currentWorkspace = Utility::getWorkspaceBySlug($slug);
 
             $project_name = $request->project_name;
@@ -63,7 +86,7 @@ class ReportController extends Controller
             }
 
             $invoices = $result->where('workspace_id','=',$currentWorkspace->id)->get();
-            return view('reports.invoice', compact('currentWorkspace', 'invoices', 'project_name', 'issue_date_from', 'issue_date_to'));
+            return view('reports.invoice', compact('currentWorkspace', 'invoices', 'project_name', 'issue_date_from', 'issue_date_to', 'projects'));
         }
         else
         {
@@ -104,20 +127,28 @@ class ReportController extends Controller
 
         $currentWorkspace = Utility::getWorkspaceBySlug($slug);
         $objUser          = Auth::user();
+//        $users  =User::all();
+        $users  = UserWorkspace::with('user')->where('workspace_id', '=', $currentWorkspace->id)->get();
         if($objUser->getGuard() == 'client')
         {
             $timesheets = Timesheet::select('timesheets.*')->join('projects', 'projects.id', '=', 'timesheets.project_id')->join('tasks', 'tasks.id', '=', 'timesheets.task_id')->join('client_projects', 'projects.id', '=', 'client_projects.project_id')->where('client_projects.client_id', '=', $objUser->id)->where('projects.workspace', '=', $currentWorkspace->id)->where('client_projects.permission', 'LIKE', '%show timesheet%')->get();
         }
-        elseif($currentWorkspace->permission == 'Owner')
-        {
-            $timesheets = Timesheet::select('timesheets.*')->join('projects', 'projects.id', '=', 'timesheets.project_id')->join('tasks', 'tasks.id', '=', 'timesheets.task_id')->where('projects.workspace', '=', $currentWorkspace->id)->get();
-        }
+//        elseif($currentWorkspace->permission == 'Owner')
+//        {
+//            $projects = Project::select('projects.*')->join('user_projects', 'projects.id', '=', 'user_projects.project_id')->where('user_projects.user_id', '=', $objUser->id)->where('projects.workspace', '=', $currentWorkspace->id)->get();
+//            $timesheets = Timesheet::select('timesheets.*')->join('projects', 'projects.id', '=', 'timesheets.project_id')->join('tasks', 'tasks.id', '=', 'timesheets.task_id')->where('projects.workspace', '=', $currentWorkspace->id)->get();
+//        }
         else
         {
+            $projects = Project::select('projects.*')->join('user_projects', 'projects.id', '=', 'user_projects.project_id')->where('user_projects.user_id', '=', $objUser->id)->where('projects.workspace', '=', $currentWorkspace->id)->get();
             $timesheets = Timesheet::select('timesheets.*')->join('projects', 'projects.id', '=', 'timesheets.project_id')->join('tasks', 'timesheets.task_id', '=', 'tasks.id')->where('projects.workspace', '=', $currentWorkspace->id)->whereRaw("find_in_set('" . $objUser->id . "',tasks.assign_to)")->get();
         }
+//        {
+//            $timesheets = Timesheet::select('timesheets.*')->join('projects', 'projects.id', '=', 'timesheets.project_id')->join('tasks', 'timesheets.task_id', '=', 'tasks.id')->where('projects.workspace', '=', $currentWorkspace->id)->whereRaw("find_in_set('" . $objUser->id . "',tasks.assign_to)")->get();
+//            $projects = Project::select('projects.*')->join('user_projects', 'projects.id', '=', 'user_projects.project_id')->where('user_projects.user_id', '=', $objUser->id)->where('projects.workspace', '=', $currentWorkspace->id)->get();
+//        }
 
-        return view('reports.timesheet', compact('currentWorkspace', 'timesheets', 'project_id'));
+        return view('reports.timesheet', compact('currentWorkspace', 'timesheets', 'project_id','users','projects'));
 
     }
 

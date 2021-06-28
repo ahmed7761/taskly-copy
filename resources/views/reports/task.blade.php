@@ -14,13 +14,22 @@
         @if($currentWorkspace->creater->id == Auth::user()->id)
             <section class="row my-5">
                 <div class="col-12">
-                    <div class="float-right">
-                        <div class="col-md-12">
+                    <div class="">
+                        <div class="col-md-4 float-left">
+                            <select class="select2 " size="sm" name="project_name" id="custom_search">
+
+                                <option value="">{{__('All Projects')}}</option>
+                                @foreach($projects as $project)
+                                    <option value="{{$project->name}}">{{$project->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-8 float-right">
                             <label for="issue_from">From</label>
                             <input type="date" name="issue_from" id="start_date1" class="custom-input">
                             <label for="issue_to">To</label>
                             <input type="date" name="issue_to" id="end_date1" class="custom-input">
-                            <input type="text" name="project_name" id="custom_search" placeholder="Enter Project Name" class="custom-input">
+{{--                            <input type="text" name="project_name" id="custom_search" placeholder="Enter Project Name" class="custom-input">--}}
                             <button type="submit" class="btn btn-xs btn-info"
                                     formaction="{{ route('task.report', $currentWorkspace->slug) }}" id="custom_search_btn">
                                 Search

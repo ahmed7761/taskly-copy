@@ -12,12 +12,25 @@
                     <form method="post" class="float-right">
                         @csrf
                         <div class="row">
-                            <input type="text" name="timesheet_search" id="timesheet_search" class="custom-input" placeholder="Enter Project Name">
+                            <select class="select2 " size="sm" name="timesheet_search" id="timesheet_search">
+
+                                <option value="">{{__('All Projects')}}</option>
+                                @foreach($projects as $project)
+                                    <option value="{{$project->name}}">{{$project->name}}</option>
+                                @endforeach
+                            </select>
+{{--                            <input type="text" name="timesheet_search" id="timesheet_search" class="custom-input" placeholder="Enter Project Name">--}}
                             <button type="button" id="timesheet_search_btn" class="btn btn-xs btn-success pdf-download-btn float-right my-1 ml-1">Search Project</button>
                             <button type="submit" class="btn btn-xs btn-success pdf-download-btn float-right my-1" formaction="{{ route('timesheet.report.print', $currentWorkspace->slug) }}" formtarget="_blank"><i class="fa fa-file"></i> {{ __('PDF') }}</button>
                         </div>
                         <div class="row mt-3">
-                            <input type="text" name="project_user_name" id="project_user_name" class="custom-input" placeholder="Enter Employee Name">
+                            <select class="custom-input form-control form-control-light select2" id="project_user_name" name="project_user_name" required>
+                                <option value="">{{__('All Users')}}</option>
+                                @foreach($users as $u)
+                                    <option value="{{$u->user->name}}">{{$u->user->name}}</option>
+                                @endforeach
+                            </select>
+{{--                            <input type="text" name="project_user_name" id="project_user_name" class="custom-input" placeholder="Enter Employee Name">--}}
                             <button type="button" id="project_user_name_btn" class="btn btn-xs btn-success pdf-download-btn float-right my-1 ml-1">Search User</button>
                             <button type="submit" class="btn btn-xs btn-success pdf-download-btn float-right my-1" formaction="{{ route('timesheet.report.print', $currentWorkspace->slug) }}" formtarget="_blank"><i class="fa fa-file"></i> {{ __('PDF') }}</button>
                         </div>
