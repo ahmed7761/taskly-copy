@@ -75,6 +75,13 @@
 
         <?php else: ?>
             <?php $__currentLoopData = $timesheetArray; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $timesheet): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <?php
+            $task = \App\Task::where('id', $timesheet['task_id'])->first();
+            $project = \App\Project::where('id', $task->project_id)->first();
+            ?>
+            <tr>
+                <td colspan="9"><span class="project-name"><strong>Project Name: </strong><?php echo e($project->name); ?></span></td>
+            </tr>
                 <tr>
                     <td>
                         <div class="task-name ml-3">

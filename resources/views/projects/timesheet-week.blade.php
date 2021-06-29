@@ -72,6 +72,13 @@
 
         @else
             @foreach ($timesheetArray as $key => $timesheet)
+            @php
+            $task = \App\Task::where('id', $timesheet['task_id'])->first();
+            $project = \App\Project::where('id', $task->project_id)->first();
+            @endphp
+            <tr>
+                <td colspan="9"><span class="project-name"><strong>Project Name: </strong>{{ $project->name }}</span></td>
+            </tr>
                 <tr>
                     <td>
                         <div class="task-name ml-3">
