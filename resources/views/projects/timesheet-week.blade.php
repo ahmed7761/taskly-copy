@@ -75,7 +75,7 @@
                 <tr>
                     <td>
                         <div class="task-name ml-3">
-                            {{ $timesheet['task_name'] }}
+                            Task Name: {{ $timesheet['task_name'] }}
                         </div>
                     </td>
 

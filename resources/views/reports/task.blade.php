@@ -17,7 +17,6 @@
                     <div class="">
                         <div class="col-md-4 float-left">
                             <select class="select2 " size="sm" name="project_name" id="custom_search">
-
                                 <option value="">{{__('All Projects')}}</option>
                                 @foreach($projects as $project)
                                     <option value="{{$project->name}}">{{$project->name}}</option>

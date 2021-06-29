@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Lato&amp;display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="{{asset('css/app.css')}}">
+    <link rel="stylesheet" type="text/css" href="<?php echo e(asset('css/app.css')); ?>">
     <style type="text/css">
         .resize-observer {
             position: absolute;
@@ -116,8 +116,8 @@
     </style>
 </head>
 <body>
-<input type="hidden" id="selected_dates" value="{{ $selected_dates_pdf }}">
-<input type="hidden" id="weeknumber" value="{{ $selected_week }}">
+<input type="hidden" id="selected_dates" value="<?php echo e($selected_dates_pdf); ?>">
+<input type="hidden" id="weeknumber" value="<?php echo e($selected_week); ?>">
 <div class="container">
     <div id="app" class="content">
         <div class="editor">
@@ -126,7 +126,7 @@
                     <div class="preview-main client-preview">
                         <div data-v-f2a183a6="" class="d" id="boxes">
                             <div data-v-f2a183a6="" class="d-body">
-                                <h1 class="pdf-title">Weekly Timesheet of {{ $project_search ? $project_search->name : $currentWorkspace->name }}</h1>
+                                <h1 class="pdf-title">Weekly Timesheet of <?php echo e($project_search ? $project_search->name : $currentWorkspace->name); ?></h1>
                                 <div class="row">
                                     <div class="col-md-12">
 
@@ -136,18 +136,21 @@
                                                 <div class="page-error">
                                                     <div class="page-inner">
                                                         <div class="page-description">
-                                                            {{ __("We couldn't find any data") }}
+                                                            <?php echo e(__("We couldn't find any data")); ?>
+
                                                         </div>
                                                         <div class="page-search">
                                                             <p class="text-muted mt-3">
-                                                                {{ __("Sorry we can't find any timesheet records on this week.") }}
+                                                                <?php echo e(__("Sorry we can't find any timesheet records on this week.")); ?>
+
                                                                 <br>
-                                                                @if($project_id != '-1' && Auth::user()->getGuard() != 'client')
-                                                                    {{ __('To add record go to ') }} <b>{{ __('Add Task on Timesheet.') }}</b>
-                                                                @else
-                                                                    {{ __('To add timesheet record go to ') }}
-                                                                    <a class="btn-return-home badge-blue" href="{{ route('projects.index', $currentWorkspace->slug) }}"><i class="fas fa-reply"></i> {{ __('Projects')}}</a>
-                                                                @endif
+                                                                <?php if($project_id != '-1' && Auth::user()->getGuard() != 'client'): ?>
+                                                                    <?php echo e(__('To add record go to ')); ?> <b><?php echo e(__('Add Task on Timesheet.')); ?></b>
+                                                                <?php else: ?>
+                                                                    <?php echo e(__('To add timesheet record go to ')); ?>
+
+                                                                    <a class="btn-return-home badge-blue" href="<?php echo e(route('projects.index', $currentWorkspace->slug)); ?>"><i class="fas fa-reply"></i> <?php echo e(__('Projects')); ?></a>
+                                                                <?php endif; ?>
                                                             </p>
                                                         </div>
                                                     </div>
@@ -167,7 +170,7 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
-<script type="text/javascript" src="{{ asset('assets/js/html2pdf.bundle.min.js') }}"></script>
+<script type="text/javascript" src="<?php echo e(asset('assets/js/html2pdf.bundle.min.js')); ?>"></script>
 
 <?php $url = route('timesheet.report', [$currentWorkspace->slug]); ?>
 
@@ -180,20 +183,20 @@
         var notfound = $('.notfound-timesheet');
 
         var week = parseInt($('#weeknumber').val());
-        var project_id = '{{ $project_id }}';
+        var project_id = '<?php echo e($project_id); ?>';
 
         var data = {
             week: week,
             project_id: project_id,
-            project_user_name: '{{ $project_user_name }}',
+            project_user_name: '<?php echo e($project_user_name); ?>',
         };
 
         $.ajax({
-            @if(Auth::user()->getGuard() == 'client')
-            url: '{{ route('client.filter.timesheet.table.view', '__slug') }}'.replace('__slug', '{{ $currentWorkspace->slug }}'),
-            @else
-            url: '{{ route('filter.timesheet.table.view', '__slug') }}'.replace('__slug', '{{ $currentWorkspace->slug }}'),
-            @endif
+            <?php if(Auth::user()->getGuard() == 'client'): ?>
+            url: '<?php echo e(route('client.filter.timesheet.table.view', '__slug')); ?>'.replace('__slug', '<?php echo e($currentWorkspace->slug); ?>'),
+            <?php else: ?>
+            url: '<?php echo e(route('filter.timesheet.table.view', '__slug')); ?>'.replace('__slug', '<?php echo e($currentWorkspace->slug); ?>'),
+            <?php endif; ?>
             data: data,
             success: function (data) {
 
@@ -263,12 +266,12 @@
         }
 
         if (type == 'create') {
-            var title = '{{ __("Create Timesheet") }}';
-            data.p_id = '{{ $project_id }}';
+            var title = '<?php echo e(__("Create Timesheet")); ?>';
+            data.p_id = '<?php echo e($project_id); ?>';
             data.project_id = data.p_id != '-1' ? data.p_id : p_id;
 
         } else if (type == 'edit') {
-            var title = '{{ __("Edit Timesheet") }}';
+            var title = '<?php echo e(__("Edit Timesheet")); ?>';
         }
 
         $("#commonModal .modal-title").html(title + ` <small>(` + moment(date).format("ddd, Do MMM YYYY") + `)</small>`);
@@ -296,9 +299,9 @@
         if (task_id != '') {
 
             $.ajax({
-                url: '{{ route('append.timesheet.task.html', '__slug') }}'.replace('__slug', '{{ $currentWorkspace->slug }}'),
+                url: '<?php echo e(route('append.timesheet.task.html', '__slug')); ?>'.replace('__slug', '<?php echo e($currentWorkspace->slug); ?>'),
                 data: {
-                    project_id: '{{ $project_id }}',
+                    project_id: '<?php echo e($project_id); ?>',
                     task_id: task_id,
                     selected_dates: selected_dates,
                 },
@@ -339,7 +342,7 @@
         hour = hour < 10 ? '0' + hour : hour;
         minute = minute < 10 ? '0' + minute : minute;
 
-        $('.display-total-time span').text('{{ __("Total Time") }} : ' + hour + ' {{ __("Hours") }} ' + minute + ' {{ __("Minutes") }}');
+        $('.display-total-time span').text('<?php echo e(__("Total Time")); ?> : ' + hour + ' <?php echo e(__("Hours")); ?> ' + minute + ' <?php echo e(__("Minutes")); ?>');
     });
 </script>
 
@@ -350,7 +353,7 @@
 
         setTimeout(function () {
 
-            window.location.href = '{{ $url }}';
+            window.location.href = '<?php echo e($url); ?>';
 
         }, 1000);
 
@@ -363,7 +366,7 @@
 
         var opt = {
 
-            filename: '{{ $currentWorkspace->slug.'-timesheet'.time() }}',
+            filename: '<?php echo e($currentWorkspace->slug.'-timesheet'.time()); ?>',
 
             image: {type: 'jpeg', quality: 1},
 
@@ -379,3 +382,4 @@
 </script>
 </body>
 </html>
+<?php /**PATH C:\xampp\htdocs\taskly\resources\views/reports/timesheet-template.blade.php ENDPATH**/ ?>

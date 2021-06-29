@@ -24,7 +24,7 @@
             <?php $__currentLoopData = $timesheetArray; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $timesheet): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 
                 <tr>
-                    <td colspan="9"><span class="project-name"><?php echo e($timesheet['project_name']); ?></span></td>
+                    <td colspan="9"><span class="project-name"><strong>Project Name: </strong><?php echo e($timesheet['project_name']); ?></span></td>
                 </tr>
 
                 <?php $__currentLoopData = $timesheet['taskArray']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $taskTimesheet): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
@@ -32,7 +32,7 @@
                     <tr>
                         <td colspan="9">
                             <div class="task-name ml-3">
-                                <?php echo e($taskTimesheet['task_name']); ?>
+                                <strong>Task Name: </strong><?php echo e($taskTimesheet['task_name']); ?>
 
                             </div>
                         </td>
@@ -78,7 +78,7 @@
                 <tr>
                     <td>
                         <div class="task-name ml-3">
-                            <?php echo e($timesheet['task_name']); ?>
+                            Task Name: <?php echo e($timesheet['task_name']); ?>
 
                         </div>
                     </td>

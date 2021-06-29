@@ -1,7 +1,20 @@
 <?php $__env->startSection('page-title'); ?> <?php echo e(__('Timesheet')); ?> <?php $__env->stopSection(); ?>
 
 <?php $client_keyword = Auth::user()->getGuard() == 'client' ? 'client.' : ''; ?>
+<?php $__env->startSection('multiple-action-button'); ?>
+    <div class="col-md-4 mt-2">
+        <div class="weekly-dates-div">
+            <i class="fa fa-arrow-left previous"></i>
 
+            <span class="weekly-dates"></span>
+
+            <input type="hidden" id="weeknumber" value="0">
+            <input type="hidden" id="selected_dates">
+
+            <i class="fa fa-arrow-right next"></i>
+        </div>
+    </div>
+<?php $__env->stopSection(); ?>
 <?php $__env->startSection('content'); ?>
     <section class="section">
         <?php if($currentWorkspace): ?>
@@ -10,12 +23,27 @@
                     <form method="post" class="float-right">
                         <?php echo csrf_field(); ?>
                         <div class="row">
-                            <input type="text" name="timesheet_search" id="timesheet_search" class="custom-input" placeholder="Enter Project Name">
+                            <select class="select2 " size="sm" name="timesheet_search" id="timesheet_search">
+
+                                <option value=""><?php echo e(__('All Projects')); ?></option>
+                                <?php $__currentLoopData = $projects; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $project): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($project->name); ?>"><?php echo e($project->name); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            </select>
+                            <input type="hidden" name="selected_dates_pdf" id="selected_dates_pdf">
+                            <input type="hidden" name="weeknumber_pdf" id="weeknumber_pdf" value="0">
+
                             <button type="button" id="timesheet_search_btn" class="btn btn-xs btn-success pdf-download-btn float-right my-1 ml-1">Search Project</button>
                             <button type="submit" class="btn btn-xs btn-success pdf-download-btn float-right my-1" formaction="<?php echo e(route('timesheet.report.print', $currentWorkspace->slug)); ?>" formtarget="_blank"><i class="fa fa-file"></i> <?php echo e(__('PDF')); ?></button>
                         </div>
                         <div class="row mt-3">
-                            <input type="text" name="project_user_name" id="project_user_name" class="custom-input" placeholder="Enter Employee Name">
+                            <select class="custom-input form-control form-control-light select2" id="project_user_name" name="project_user_name">
+                                <option value=""><?php echo e(__('All Users')); ?></option>
+                                <?php $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $u): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($u->user->name); ?>"><?php echo e($u->user->name); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            </select>
+
                             <button type="button" id="project_user_name_btn" class="btn btn-xs btn-success pdf-download-btn float-right my-1 ml-1">Search User</button>
                             <button type="submit" class="btn btn-xs btn-success pdf-download-btn float-right my-1" formaction="<?php echo e(route('timesheet.report.print', $currentWorkspace->slug)); ?>" formtarget="_blank"><i class="fa fa-file"></i> <?php echo e(__('PDF')); ?></button>
                         </div>
@@ -91,7 +119,9 @@
                 success: function (data) {
 
                     $('.weekly-dates-div .weekly-dates').text(data.onewWeekDate);
+
                     $('.weekly-dates-div #selected_dates').val(data.selectedDate);
+                    $('#selected_dates_pdf').val(data.selectedDate);
 
                     $('#project_tasks').find('option').not(':first').remove();
 
@@ -132,6 +162,7 @@
                 weeknumber++;
                 $('#weeknumber').val(weeknumber);
             }
+            $('#weeknumber_pdf').val(weeknumber);
 
             ajaxFilterTimesheetTableView();
         });

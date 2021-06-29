@@ -4,14 +4,22 @@
         <?php if($currentWorkspace->creater->id == Auth::user()->id): ?>
             <section class="row my-5">
                 <div class="col-12">
-                    <form method="post" class="float-right">
+                    <form method="post" class="">
                         <?php echo csrf_field(); ?>
+                        <div class="col-md-4 float-left">
+                            <select class="select2 " size="sm" name="project_name" id="custom_search">
+                                <option value=""><?php echo e(__('All Projects')); ?></option>
+                                <?php $__currentLoopData = $projects; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $project): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($project->name); ?>" <?php echo e($project->name == $project_name  ? 'selected' : ''); ?>><?php echo e($project->name); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            </select>
+                        </div>
                         <div class="col-md-12">
                             <label for="issue_from">From</label>
                             <input type="date" name="issue_from" id="issue_from" class="custom-input" value="<?php echo e($issue_date_from ?? \Carbon\Carbon::parse($issue_date_from)->format('Y-m-d')); ?>">
                             <label for="issue_to">To</label>
                             <input type="date" name="issue_to" id="issue_to" class="custom-input" value="<?php echo e($issue_date_to ?? \Carbon\Carbon::parse($issue_date_to)->format('Y-m-d')); ?>">
-                            <input type="text" name="project_name" id="custom_search" class="custom-input" value="<?php echo e($project_name ??  $project_name); ?>" placeholder="Enter Project Name">
+                            
 
                             <button type="submit" class="btn btn-xs btn-info" formaction="<?php echo e(route('invoice.report.search', $currentWorkspace->slug)); ?>">Search</button>
                         </div>

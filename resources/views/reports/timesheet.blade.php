@@ -3,7 +3,20 @@
 @section('page-title') {{__('Timesheet')}} @endsection
 
 @php $client_keyword = Auth::user()->getGuard() == 'client' ? 'client.' : ''; @endphp
+@section('multiple-action-button')
+    <div class="col-md-4 mt-2">
+        <div class="weekly-dates-div">
+            <i class="fa fa-arrow-left previous"></i>
 
+            <span class="weekly-dates"></span>
+
+            <input type="hidden" id="weeknumber" value="0">
+            <input type="hidden" id="selected_dates">
+
+            <i class="fa fa-arrow-right next"></i>
+        </div>
+    </div>
+@endsection
 @section('content')
     <section class="section">
         @if($currentWorkspace)
@@ -19,12 +32,14 @@
                                     <option value="{{$project->name}}">{{$project->name}}</option>
                                 @endforeach
                             </select>
+                            <input type="hidden" name="selected_dates_pdf" id="selected_dates_pdf">
+                            <input type="hidden" name="weeknumber_pdf" id="weeknumber_pdf" value="0">
 {{--                            <input type="text" name="timesheet_search" id="timesheet_search" class="custom-input" placeholder="Enter Project Name">--}}
                             <button type="button" id="timesheet_search_btn" class="btn btn-xs btn-success pdf-download-btn float-right my-1 ml-1">Search Project</button>
                             <button type="submit" class="btn btn-xs btn-success pdf-download-btn float-right my-1" formaction="{{ route('timesheet.report.print', $currentWorkspace->slug) }}" formtarget="_blank"><i class="fa fa-file"></i> {{ __('PDF') }}</button>
                         </div>
                         <div class="row mt-3">
-                            <select class="custom-input form-control form-control-light select2" id="project_user_name" name="project_user_name" required>
+                            <select class="custom-input form-control form-control-light select2" id="project_user_name" name="project_user_name">
                                 <option value="">{{__('All Users')}}</option>
                                 @foreach($users as $u)
                                     <option value="{{$u->user->name}}">{{$u->user->name}}</option>
@@ -103,7 +118,9 @@
                 success: function (data) {
 
                     $('.weekly-dates-div .weekly-dates').text(data.onewWeekDate);
+
                     $('.weekly-dates-div #selected_dates').val(data.selectedDate);
+                    $('#selected_dates_pdf').val(data.selectedDate);
 
                     $('#project_tasks').find('option').not(':first').remove();
 
@@ -144,6 +161,7 @@
                 weeknumber++;
                 $('#weeknumber').val(weeknumber);
             }
+            $('#weeknumber_pdf').val(weeknumber);
 
             ajaxFilterTimesheetTableView();
         });

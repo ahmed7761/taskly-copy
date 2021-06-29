@@ -12,13 +12,21 @@
         <?php if($currentWorkspace->creater->id == Auth::user()->id): ?>
             <section class="row my-5">
                 <div class="col-12">
-                    <div class="float-right">
-                        <div class="col-md-12">
+                    <div class="">
+                        <div class="col-md-4 float-left">
+                            <select class="select2 " size="sm" name="project_name" id="custom_search">
+                                <option value=""><?php echo e(__('All Projects')); ?></option>
+                                <?php $__currentLoopData = $projects; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $project): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($project->name); ?>"><?php echo e($project->name); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            </select>
+                        </div>
+                        <div class="col-md-8 float-right">
                             <label for="issue_from">From</label>
                             <input type="date" name="issue_from" id="start_date1" class="custom-input">
                             <label for="issue_to">To</label>
                             <input type="date" name="issue_to" id="end_date1" class="custom-input">
-                            <input type="text" name="project_name" id="custom_search" placeholder="Enter Project Name" class="custom-input">
+
                             <button type="submit" class="btn btn-xs btn-info"
                                     formaction="<?php echo e(route('task.report', $currentWorkspace->slug)); ?>" id="custom_search_btn">
                                 Search
